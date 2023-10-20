@@ -1,7 +1,23 @@
 import { todolistsAPI, TodolistType } from "api/todolists-api";
 import { appActions, RequestStatusType } from "app/app-reducer";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppThunk } from "app/store";
+import { handleServerNetworkError } from "utils/error-utils";
+
+export const fetchTodolistsTC = createAsyncThunk(
+  "todolists/fetchTodolists",
+  async (param, { dispatch, rejectWithValue }) => {
+    dispatch(appActions.setAppStatus({ status: "loading" }));
+    const res = await todolistsAPI.getTodolists();
+    try {
+      dispatch(appActions.setAppStatus({ status: "succeeded" }));
+      return { todolists: res.data };
+    } catch (error: any) {
+      handleServerNetworkError(error, dispatch);
+      return rejectWithValue(null);
+    }
+  }
+);
 
 const slice = createSlice({
   name: "todolists",
@@ -18,56 +34,46 @@ const slice = createSlice({
         entityStatus: "idle",
       });
     },
-    changeTodolistTitle: (
-      state,
-      action: PayloadAction<{ id: string; title: string }>
-    ) => {
+    changeTodolistTitle: (state, action: PayloadAction<{ id: string; title: string }>) => {
       const index = state.findIndex((todo) => todo.id === action.payload.id);
       if (index !== -1) state[index].title = action.payload.title;
     },
-    changeTodolistFilter: (
-      state,
-      action: PayloadAction<{ id: string; filter: FilterValuesType }>
-    ) => {
+    changeTodolistFilter: (state, action: PayloadAction<{ id: string; filter: FilterValuesType }>) => {
       const index = state.findIndex((todo) => todo.id === action.payload.id);
       if (index !== -1) state[index].filter = action.payload.filter;
     },
-    changeTodolistEntityStatus: (
-      state,
-      action: PayloadAction<{ id: string; entityStatus: RequestStatusType }>
-    ) => {
+    changeTodolistEntityStatus: (state, action: PayloadAction<{ id: string; entityStatus: RequestStatusType }>) => {
       const todolist = state.find((todo) => todo.id === action.payload.id);
       if (todolist) {
         todolist.entityStatus = action.payload.entityStatus;
       }
     },
-    setTodolists: (
-      state,
-      action: PayloadAction<{ todolists: TodolistType[] }>
-    ) => {
-      // return action.payload.todolists.map((todo) => ({ ...todo, filter: "all", entityStatus: "idle" }));
-      action.payload.todolists.forEach((tl) =>
-        state.push({ ...tl, filter: "all", entityStatus: "idle" })
-      );
-    },
+    // setTodolists: (state, action: PayloadAction<{ todolists: TodolistType[] }>) => {
+    //   action.payload.todolists.forEach((tl) => state.push({ ...tl, filter: "all", entityStatus: "idle" }));
+    // },
     setNullState: (state, action: PayloadAction) => {
       return [];
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(fetchTodolistsTC.fulfilled, (state, action) => {
+      action.payload.todolists.forEach((tl) => state.push({ ...tl, filter: "all", entityStatus: "idle" }));
+    });
   },
 });
 export const todolistsReducer = slice.reducer;
 export const todolistsActions = slice.actions;
 
 // thunks
-export const fetchTodolistsTC = (): AppThunk => {
-  return (dispatch) => {
-    dispatch(appActions.setAppStatus({ status: "loading" }));
-    todolistsAPI.getTodolists().then((res) => {
-      dispatch(todolistsActions.setTodolists({ todolists: res.data }));
-      dispatch(appActions.setAppStatus({ status: "succeeded" }));
-    });
-  };
-};
+// export const fetchTodolistsTC_ = (): AppThunk => {
+//   return (dispatch) => {
+//     dispatch(appActions.setAppStatus({ status: "loading" }));
+//     todolistsAPI.getTodolists().then((res) => {
+//       dispatch(todolistsActions.setTodolists({ todolists: res.data }));
+//       dispatch(appActions.setAppStatus({ status: "succeeded" }));
+//     });
+//   };
+// };
 export const removeTodolistTC = (id: string): AppThunk => {
   return (dispatch) => {
     dispatch(appActions.setAppStatus({ status: "loading" }));

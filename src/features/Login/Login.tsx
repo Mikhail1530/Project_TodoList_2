@@ -11,12 +11,6 @@ import { useAppDispatch, useAppSelector } from "app/store";
 import { loginTC } from "./auth-reducer";
 import { Navigate } from "react-router-dom";
 
-type FormikValuesType = {
-  email: string;
-  password: string;
-  rememberMe: boolean;
-};
-
 export const Login = () => {
   const dispatch = useAppDispatch();
   const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
@@ -41,14 +35,14 @@ export const Login = () => {
       }
       return errors;
     },
-    onSubmit: async (values: FormikValuesType, formikHelpers: FormikHelpers<FormikValuesType>) => {
+    onSubmit: async (values: LoginDataType, formikHelpers: FormikHelpers<LoginDataType>) => {
       const action = await dispatch(loginTC(values));
-      // if (loginTC.rejected.match(action)) {
-      //   if (action.payload?.fieldsErrors?.length) {
-      //     const error = action.payload?.fieldsErrors[0];
-      //     formikHelpers.setFieldError(error.field, error.error);
-      //   }
-      // }
+      if (loginTC.rejected.match(action)) {
+        if (action.payload?.fieldsErrors?.length) {
+          const error = action.payload?.fieldsErrors[0];
+          formikHelpers.setFieldError(error.field, error.error);
+        }
+      }
       formik.resetForm();
     },
   });
