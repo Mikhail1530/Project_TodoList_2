@@ -33,7 +33,6 @@ function App() {
   }, []);
 
   if (!isInitialized) {
-    console.log(isInitialized);
     return (
       <div
         style={{
@@ -69,7 +68,7 @@ function App() {
         <Routes>
           <Route path={"/"} element={<TodolistsList />} />
           <Route path={"/login"} element={<Login />} />
-          <Route path={"/404"} element={<h1>404: PAGE NOT FOUND</h1>} />
+          {/* <Route path={"/404"} element={<h1>404: PAGE NOT FOUND</h1>} /> */}
           <Route path={"*"} element={<Navigate to="/login" />} />
         </Routes>
       </Container>

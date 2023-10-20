@@ -13,11 +13,13 @@ export const fetchTasksTC = createAsyncThunk("tasks/fetchTasks", async (todolist
   return { tasks, todolistId };
 });
 
-export const removeTaskTC = createAsyncThunk("tasks/removeTask", (param: { taskId: string; todolistId: string }) => {
-  return todolistsAPI.deleteTask(param.todolistId, param.taskId).then((res) => {
+export const removeTaskTC = createAsyncThunk(
+  "tasks/removeTask",
+  async (param: { taskId: string; todolistId: string }) => {
+    const res = await todolistsAPI.deleteTask(param.todolistId, param.taskId);
     return { taskId: param.taskId, todolistId: param.todolistId };
-  });
-});
+  }
+);
 const slice = createSlice({
   name: "tasks",
   initialState: {} as TasksStateType,

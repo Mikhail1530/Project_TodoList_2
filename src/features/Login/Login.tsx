@@ -1,19 +1,25 @@
-import Grid from "@mui/material/Grid"
-import Checkbox from "@mui/material/Checkbox"
-import FormControl from "@mui/material/FormControl"
-import FormControlLabel from "@mui/material/FormControlLabel"
-import FormGroup from "@mui/material/FormGroup"
-import FormLabel from "@mui/material/FormLabel"
-import TextField from "@mui/material/TextField"
-import Button from "@mui/material/Button"
-import { useFormik } from "formik"
-import { useAppDispatch, useAppSelector } from "app/store"
-import { loginTC } from "./auth-reducer"
-import { Navigate } from "react-router-dom"
+import Grid from "@mui/material/Grid";
+import Checkbox from "@mui/material/Checkbox";
+import FormControl from "@mui/material/FormControl";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormGroup from "@mui/material/FormGroup";
+import FormLabel from "@mui/material/FormLabel";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import { FormikHelpers, useFormik } from "formik";
+import { useAppDispatch, useAppSelector } from "app/store";
+import { loginTC } from "./auth-reducer";
+import { Navigate } from "react-router-dom";
+
+type FormikValuesType = {
+  email: string;
+  password: string;
+  rememberMe: boolean;
+};
 
 export const Login = () => {
-  const dispatch = useAppDispatch()
-  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn)
+  const dispatch = useAppDispatch();
+  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
 
   const formik = useFormik({
     initialValues: {
@@ -22,27 +28,33 @@ export const Login = () => {
       rememberMe: false,
     },
     validate: (values) => {
-      const errors: FormikErrorsType = {}
+      const errors: FormikErrorsType = {};
       if (!values.email) {
-        errors.email = "Required"
+        errors.email = "Required";
       } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-        errors.email = "Invalid email address"
+        errors.email = "Invalid email address";
       }
       if (!values.password) {
-        errors.password = "Required"
+        errors.password = "Required";
       } else if (values.password.length < 5) {
-        errors.password = "Should be more then 5 symbols"
+        errors.password = "Should be more then 5 symbols";
       }
-      return errors
+      return errors;
     },
-    onSubmit: (values) => {
-      dispatch(loginTC(values))
-      formik.resetForm()
+    onSubmit: async (values: FormikValuesType, formikHelpers: FormikHelpers<FormikValuesType>) => {
+      const action = await dispatch(loginTC(values));
+      // if (loginTC.rejected.match(action)) {
+      //   if (action.payload?.fieldsErrors?.length) {
+      //     const error = action.payload?.fieldsErrors[0];
+      //     formikHelpers.setFieldError(error.field, error.error);
+      //   }
+      // }
+      formik.resetForm();
     },
-  })
+  });
 
   if (isLoggedIn) {
-    return <Navigate to={"/"} />
+    return <Navigate to={"/"} />;
   }
 
   return (
@@ -80,15 +92,15 @@ export const Login = () => {
         </FormControl>
       </Grid>
     </Grid>
-  )
-}
+  );
+};
 
 type FormikErrorsType = {
-  email?: string
-  password?: string
-}
+  email?: string;
+  password?: string;
+};
 export type LoginDataType = {
-  email: string
-  password: string
-  rememberMe: boolean
-}
+  email: string;
+  password: string;
+  rememberMe: boolean;
+};
