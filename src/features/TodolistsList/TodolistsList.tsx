@@ -13,14 +13,15 @@ import { addTaskTC, removeTaskTC, TasksStateType, updateTaskTC } from "./tasks-r
 import { TaskStatuses } from "api/todolists-api";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import { AddItemForm } from "components/AddItemForm/AddItemForm";
+import { AddItemForm } from "common/components/AddItemForm/AddItemForm";
 import { Todolist } from "./Todolist/Todolist";
 import { Navigate } from "react-router-dom";
+import { selectIsLoggedIn } from "features/Login/auth-selectors";
 
 export const TodolistsList: React.FC = () => {
-  const todolists = useAppSelector<Array<TodolistDomainType>>((state) => state.todolists);
+  const todolists = useAppSelector<TodolistDomainType[]>((state) => state.todolists);
   const tasks = useAppSelector<TasksStateType>((state) => state.tasks);
-  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
+  const isLoggedIn = useAppSelector(selectIsLoggedIn);
   const dispatch = useAppDispatch();
 
   useEffect(() => {

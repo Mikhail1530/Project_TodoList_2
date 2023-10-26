@@ -10,10 +10,11 @@ import { FormikHelpers, useFormik } from "formik";
 import { useAppDispatch, useAppSelector } from "app/store";
 import { loginTC } from "./auth-reducer";
 import { Navigate } from "react-router-dom";
+import { selectIsLoggedIn } from "./auth-selectors";
 
 export const Login = () => {
   const dispatch = useAppDispatch();
-  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
+  const isLoggedIn = useAppSelector(selectIsLoggedIn);
 
   const formik = useFormik({
     initialValues: {

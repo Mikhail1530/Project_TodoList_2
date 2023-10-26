@@ -1,6 +1,4 @@
 import React, { useCallback, useEffect } from "react";
-import { AddItemForm } from "components/AddItemForm/AddItemForm";
-import { EditableSpan } from "components/EditableSpan/EditableSpan";
 import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
 import { Delete } from "@mui/icons-material";
@@ -9,6 +7,7 @@ import { TaskStatuses, TaskType } from "api/todolists-api";
 import { FilterValuesType, TodolistDomainType } from "../todolists-reducer";
 import { fetchTasksTC } from "../tasks-reducer";
 import { useAppDispatch } from "app/store";
+import { AddItemForm, EditableSpan } from "common/components";
 
 type PropsType = {
   todolist: TodolistDomainType;
@@ -35,7 +34,7 @@ export const Todolist = React.memo(function ({ ...props }: PropsType) {
     (title: string) => {
       props.addTask(title, props.todolist.id);
     },
-    [props.addTask, props.todolist.id],
+    [props.addTask, props.todolist.id]
   );
 
   const removeTodolist = () => {
@@ -45,20 +44,20 @@ export const Todolist = React.memo(function ({ ...props }: PropsType) {
     (title: string) => {
       props.changeTodolistTitle(props.todolist.id, title);
     },
-    [props.todolist.id, props.changeTodolistTitle],
+    [props.todolist.id, props.changeTodolistTitle]
   );
 
   const onAllClickHandler = useCallback(
     () => props.changeFilter("all", props.todolist.id),
-    [props.todolist.id, props.changeFilter],
+    [props.todolist.id, props.changeFilter]
   );
   const onActiveClickHandler = useCallback(
     () => props.changeFilter("active", props.todolist.id),
-    [props.todolist.id, props.changeFilter],
+    [props.todolist.id, props.changeFilter]
   );
   const onCompletedClickHandler = useCallback(
     () => props.changeFilter("completed", props.todolist.id),
-    [props.todolist.id, props.changeFilter],
+    [props.todolist.id, props.changeFilter]
   );
 
   let tasksForTodolist = props.tasks;

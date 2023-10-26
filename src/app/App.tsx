@@ -1,5 +1,5 @@
-import { useEffect } from "react";
 import "./App.css";
+import { useEffect } from "react";
 import { TodolistsList } from "features/TodolistsList/TodolistsList";
 import { useAppDispatch, useAppSelector } from "./store";
 import { RequestStatusType } from "./app-reducer";
@@ -11,17 +11,18 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import LinearProgress from "@mui/material/LinearProgress";
 import { Menu } from "@mui/icons-material";
-import { ErrorSnackbar } from "../components/ErrorSnackbar/ErrorSnackbar";
 import { Login } from "features/Login/Login";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { logOutTC, meTC } from "features/Login/auth-reducer";
 import CircularProgress from "@mui/material/CircularProgress";
 import { selectIsInitialized, selectStatus } from "./app-selectors";
+import { ErrorSnackbar } from "common/components";
+import { selectIsLoggedIn } from "features/Login/auth-selectors";
 
 function App() {
   const dispatch = useAppDispatch();
   const status = useAppSelector<RequestStatusType>(selectStatus);
-  const isLoggedIn = useAppSelector<boolean>((state) => state.auth.isLoggedIn);
+  const isLoggedIn = useAppSelector<boolean>(selectIsLoggedIn);
   const isInitialized = useAppSelector<boolean>(selectIsInitialized);
 
   const logOutHandler = () => {
