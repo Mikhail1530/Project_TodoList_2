@@ -6,48 +6,14 @@ import FormGroup from "@mui/material/FormGroup";
 import FormLabel from "@mui/material/FormLabel";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { FormikHelpers, useFormik } from "formik";
-import { useAppDispatch, useAppSelector } from "app/store";
-import { loginTC } from "./auth-reducer";
+import { useAppSelector } from "app/store";
 import { Navigate } from "react-router-dom";
 import { selectIsLoggedIn } from "./auth-selectors";
+import { useLogin } from "./lib/useLogin";
 
 export const Login = () => {
-  const dispatch = useAppDispatch();
   const isLoggedIn = useAppSelector(selectIsLoggedIn);
-
-  const formik = useFormik({
-    initialValues: {
-      email: "",
-      password: "",
-      rememberMe: false,
-    },
-    validate: (values) => {
-      const errors: FormikErrorsType = {};
-      if (!values.email) {
-        errors.email = "Required";
-      } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-        errors.email = "Invalid email address";
-      }
-      if (!values.password) {
-        errors.password = "Required";
-      } else if (values.password.length < 5) {
-        errors.password = "Should be more then 5 symbols";
-      }
-      return errors;
-    },
-    onSubmit: async (values: LoginDataType, formikHelpers: FormikHelpers<LoginDataType>) => {
-      const action = await dispatch(loginTC(values));
-      if (loginTC.rejected.match(action)) {
-        if (action.payload?.fieldsErrors?.length) {
-          const error = action.payload?.fieldsErrors[0];
-          formikHelpers.setFieldError(error.field, error.error);
-        }
-      }
-      formik.resetForm();
-    },
-  });
-
+  const formik = useLogin();
   if (isLoggedIn) {
     return <Navigate to={"/"} />;
   }
@@ -88,14 +54,4 @@ export const Login = () => {
       </Grid>
     </Grid>
   );
-};
-
-type FormikErrorsType = {
-  email?: string;
-  password?: string;
-};
-export type LoginDataType = {
-  email: string;
-  password: string;
-  rememberMe: boolean;
 };

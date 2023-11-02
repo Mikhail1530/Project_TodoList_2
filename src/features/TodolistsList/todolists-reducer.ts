@@ -1,8 +1,8 @@
 import { todolistsAPI, TodolistType } from "api/todolists-api";
 import { appActions, RequestStatusType } from "app/app-reducer";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AppThunk } from "app/store";
 import { handleServerNetworkError } from "common/utils";
+import { AppThunk } from "app/store";
 
 export const fetchTodolistsTC = createAsyncThunk(
   "todolists/fetchTodolists",

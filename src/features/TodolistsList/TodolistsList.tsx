@@ -16,7 +16,7 @@ import Paper from "@mui/material/Paper";
 import { AddItemForm } from "common/components/AddItemForm/AddItemForm";
 import { Todolist } from "./Todolist/Todolist";
 import { Navigate } from "react-router-dom";
-import { selectIsLoggedIn } from "features/Login/auth-selectors";
+import { selectIsLoggedIn } from "features/auth/auth-selectors";
 
 export const TodolistsList: React.FC = () => {
   const todolists = useAppSelector<TodolistDomainType[]>((state) => state.todolists);

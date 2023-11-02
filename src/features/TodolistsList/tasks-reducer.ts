@@ -156,9 +156,13 @@ export type UpdateDomainTaskModelType = {
   startDate?: string;
   deadline?: string;
 };
-export type TasksStateType = {
-  [key: string]: TaskType[];
-};
+// two variants of type
+export type TasksStateType = Record<string, TaskType[]>;
+
+// export type TasksStateType = {
+//   [key: string]: TaskType[];
+// };
+
 // отличный вариант Enum
 const ResultCode = {
   success: 0,

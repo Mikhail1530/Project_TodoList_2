@@ -1,12 +1,10 @@
 import { FieldsErrorType, authAPI } from "api/todolists-api";
-import { handleServerNetworkError } from "common/utils/handleServerNetworkError";
-import { LoginDataType } from "./Login";
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AppThunk } from "app/store";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { appActions } from "app/app-reducer";
 import { todolistsActions } from "features/TodolistsList/todolists-reducer";
 import { tasksActions } from "features/TodolistsList/tasks-reducer";
-import { handleServerAppError } from "common/utils/handleServerAppError";
+import { handleServerAppError, handleServerNetworkError } from "common/utils";
+import { LoginDataType } from "./lib/useLogin";
 
 // reducer from redux-toolkit
 
@@ -52,16 +50,29 @@ export const logOutTC = createAsyncThunk("auth/logout", async (param, thunkAPI) 
   }
 });
 
+export const meTC = createAsyncThunk("auth/me", async (param, { dispatch, rejectWithValue }) => {
+  try {
+    const res = await authAPI.me();
+    if (res.data.resultCode === 0) {
+      return;
+    } else {
+      // handleServerAppError(res.data, dispatch);
+      return rejectWithValue({});
+    }
+  } catch (e) {
+    handleServerNetworkError(e as { message: string }, dispatch);
+    return rejectWithValue({});
+  } finally {
+    dispatch(appActions.setIsInitialized({ isInitialized: true }));
+  }
+});
+
 const slice = createSlice({
   name: "auth",
   initialState: {
     isLoggedIn: false,
   },
-  reducers: {
-    setIsLoggedIn: (state, action: PayloadAction<{ isLoggedIn: boolean }>) => {
-      state.isLoggedIn = action.payload.isLoggedIn;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder.addCase(loginTC.fulfilled, (state) => {
       state.isLoggedIn = true;
@@ -69,11 +80,13 @@ const slice = createSlice({
     builder.addCase(logOutTC.fulfilled, (state) => {
       state.isLoggedIn = false;
     });
+    builder.addCase(meTC.fulfilled, (state) => {
+      state.isLoggedIn = true;
+    });
   },
 });
 
 export const authReducer = slice.reducer;
-export const authActions = slice.actions;
 
 // thunks
 
@@ -109,22 +122,22 @@ export const authActions = slice.actions;
 //     handleServerNetworkError(e as { message: string }, dispatch);
 //   }
 // };
-export const meTC = (): AppThunk => async (dispatch) => {
-  dispatch(appActions.setAppStatus({ status: "loading" }));
-  try {
-    const result = await authAPI.me();
-    if (result.data.resultCode === 0) {
-      dispatch(authActions.setIsLoggedIn({ isLoggedIn: true }));
-      dispatch(appActions.setAppStatus({ status: "succeeded" }));
-    } else {
-      handleServerAppError(result.data, dispatch);
-    }
-  } catch (e) {
-    handleServerNetworkError(e as { message: string }, dispatch);
-  } finally {
-    dispatch(appActions.setIsInitialized({ isInitialized: true }));
-  }
-};
+// export const meTC_ = (): AppThunk => async (dispatch) => {
+//   dispatch(appActions.setAppStatus({ status: "loading" }));
+//   try {
+//     const result = await authAPI.me();
+//     if (result.data.resultCode === 0) {
+//       dispatch(authActions.setIsLoggedIn({ isLoggedIn: true }));
+//       dispatch(appActions.setAppStatus({ status: "succeeded" }));
+//     } else {
+//       handleServerAppError(result.data, dispatch);
+//     }
+//   } catch (e) {
+//     handleServerNetworkError(e as { message: string }, dispatch);
+//   } finally {
+//     dispatch(appActions.setIsInitialized({ isInitialized: true }));
+//   }
+// };
 
 // const initialState = {
 //   isLoggedIn: false,
