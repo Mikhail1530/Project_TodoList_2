@@ -8,15 +8,15 @@ import {
   removeTodolistTC,
   TodolistDomainType,
   todolistsActions,
-} from "./todolists-reducer";
-import { addTaskTC, removeTaskTC, TasksStateType, updateTaskTC } from "./tasks-reducer";
-import { TaskStatuses } from "api/todolists-api";
+} from "../model/todolists-reducer";
+import { addTaskTC, removeTaskTC, TasksStateType, updateTaskTC } from "../model/tasks-reducer";
+import { TaskStatuses } from "features/TodolistsList/api/todolists-api";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import { AddItemForm } from "common/components/AddItemForm/AddItemForm";
 import { Todolist } from "./Todolist/Todolist";
 import { Navigate } from "react-router-dom";
-import { selectIsLoggedIn } from "features/auth/auth-selectors";
+import { selectIsLoggedIn } from "features/auth/model/auth-selectors";
 
 export const TodolistsList: React.FC = () => {
   const todolists = useAppSelector<TodolistDomainType[]>((state) => state.todolists);

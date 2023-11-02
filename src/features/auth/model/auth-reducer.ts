@@ -1,10 +1,10 @@
-import { FieldsErrorType, authAPI } from "api/todolists-api";
+import { FieldsErrorType, authAPI } from "features/TodolistsList/api/todolists-api";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { appActions } from "app/app-reducer";
-import { todolistsActions } from "features/TodolistsList/todolists-reducer";
-import { tasksActions } from "features/TodolistsList/tasks-reducer";
+import { appActions } from "app/model/app-reducer";
+import { todolistsActions } from "features/TodolistsList/model/todolists-reducer";
+import { tasksActions } from "features/TodolistsList/model/tasks-reducer";
 import { handleServerAppError, handleServerNetworkError } from "common/utils";
-import { LoginDataType } from "./lib/useLogin";
+import { LoginDataType } from "../lib/useLogin";
 
 // reducer from redux-toolkit
 

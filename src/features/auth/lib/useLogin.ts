@@ -1,9 +1,11 @@
-import { useAppDispatch } from "app/store";
+import { useAppDispatch, useAppSelector } from "app/store";
 import { FormikHelpers, useFormik } from "formik";
-import { loginTC } from "../auth-reducer";
+import { loginTC } from "../model/auth-reducer";
+import { selectIsLoggedIn } from "../model/auth-selectors";
 
 export const useLogin = () => {
   const dispatch = useAppDispatch();
+  const isLoggedIn = useAppSelector(selectIsLoggedIn);
 
   const formik = useFormik({
     initialValues: {
@@ -44,7 +46,7 @@ export const useLogin = () => {
     //   formik.resetForm();
     // },
   });
-  return formik;
+  return { formik, isLoggedIn };
 };
 
 // two variants of errorType

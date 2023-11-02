@@ -1,5 +1,5 @@
-import { ResponseType } from "api/todolists-api";
-import { appActions } from "app/app-reducer";
+import { ResponseType } from "features/TodolistsList/api/todolists-api";
+import { appActions } from "app/model/app-reducer";
 import { Dispatch } from "redux";
 
 export const handleServerAppError = <D>(data: ResponseType<D>, dispatch: Dispatch) => {

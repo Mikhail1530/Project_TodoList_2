@@ -1,8 +1,8 @@
 import "./App.css";
 import { useEffect } from "react";
-import { TodolistsList } from "features/TodolistsList/TodolistsList";
-import { useAppDispatch, useAppSelector } from "./store";
-import { RequestStatusType } from "./app-reducer";
+import { TodolistsList } from "features/TodolistsList/ui/TodolistsList";
+import { useAppDispatch, useAppSelector } from "../store";
+import { RequestStatusType } from "../model/app-reducer";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
@@ -11,13 +11,13 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import LinearProgress from "@mui/material/LinearProgress";
 import { Menu } from "@mui/icons-material";
-import { Login } from "features/auth/Login";
+import { Login } from "features/auth/ui/Login";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { logOutTC, meTC } from "features/auth/auth-reducer";
+import { logOutTC, meTC } from "features/auth/model/auth-reducer";
 import CircularProgress from "@mui/material/CircularProgress";
-import { selectIsInitialized, selectStatus } from "./app-selectors";
+import { selectIsInitialized, selectStatus } from "../model/app-selectors";
 import { ErrorSnackbar } from "common/components";
-import { selectIsLoggedIn } from "features/auth/auth-selectors";
+import { selectIsLoggedIn } from "features/auth/model/auth-selectors";
 
 function App() {
   const dispatch = useAppDispatch();
