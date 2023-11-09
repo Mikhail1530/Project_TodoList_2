@@ -2,7 +2,7 @@
   "name": "my-app",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://Mikhail1530.github.io/Project_TodoList_2",
+  "homepage": "https://mikhail1530.github.io/Project_TodoList_2",
   "dependencies": {
     "@babel/core": "^7.16.0",
     "@emotion/react": "^11.11.1",

@@ -1,26 +1,27 @@
-import { AddBox } from "@mui/icons-material";
-import IconButton from "@mui/material/IconButton";
-import TextField from "@mui/material/TextField";
 import React, { ChangeEvent, KeyboardEvent, useState } from "react";
+import { IconButton, TextField } from "@mui/material";
+import { AddBox } from "@mui/icons-material";
 
 type AddItemFormPropsType = {
-  addItem: (title: string) => void;
+  addItem: (title: string) => Promise<any>;
   disabled?: boolean;
 };
 
-export const AddItemForm = React.memo(function ({
-  addItem,
-  disabled = false,
-}: AddItemFormPropsType) {
-  console.log("AddItemForm called");
-
+export const AddItemForm = React.memo(function ({ addItem, disabled = false }: AddItemFormPropsType) {
   let [title, setTitle] = useState("");
   let [error, setError] = useState<string | null>(null);
 
   const addItemHandler = () => {
     if (title.trim() !== "") {
-      addItem(title);
-      setTitle("");
+      addItem(title)
+        .then(() => {
+          setTitle("");
+        })
+        .catch((error) => {
+          if (error?.resultCode) {
+            setError(error.messages[0]);
+          }
+        });
     } else {
       setError("Title is required");
     }
